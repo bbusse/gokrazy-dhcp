@@ -1,0 +1,30 @@
+name: Build and Release Go Binaries
+
+on:
+  push:
+    branches: [ci]
+  pull_request:
+    branches: [ci]
+  workflow_dispatch:
+
+jobs:
+  build-go-pkg-linux:
+    uses: bbusse/github-workflows/.github/workflows/build-go-pkg-linux.yml@dev
+    with:
+      repository: gokrazy/gokrazy
+      working_directory: cmd/dhcp
+      artifact_name: gokrazy-dhcp
+
+  release:
+    needs:
+      - build-go-pkg-linux
+    if: github.event_name == 'push'
+    permissions:
+      contents: write
+    uses: bbusse/github-workflows/.github/workflows/release.yml@dev
+    with:
+      artifact_name: gokrazy-dhcp
+      binary_name: gokrazy-dhcp
+      release_branch: ci
+      always_release: true
+    secrets: inherit

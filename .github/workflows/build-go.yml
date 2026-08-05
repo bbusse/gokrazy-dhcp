@@ -1,0 +1,16 @@
+name: Build Go Binaries
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+  workflow_dispatch:
+
+jobs:
+  build-go-pkg-linux:
+    uses: bbusse/github-workflows/.github/workflows/build-go-pkg-linux.yml@dev
+    with:
+      repository: gokrazy/gokrazy
+      working_directory: cmd/dhcp
+      artifact_name: gokrazy-dhcp
